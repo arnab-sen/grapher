@@ -3,5 +3,14 @@ html {
 }
 
 #mainCanvas {
-  background-color: white;
+  background-color: rgb(255, 255, 255);
+}
+
+.buttonRow {
+  margin-top: 10px;
+}
+
+p {
+  color: silver;
+  font-family: sans-serif;
 }
