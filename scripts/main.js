@@ -31,7 +31,6 @@ class Graph {
   snapshotCanvas(canvas = this.canvas) {
     /* Saves the ImageData of the current canvas */
     this.tempImageData = canvas.getContext("2d").getImageData(0, 0, canvas.height, canvas.width);
-  
   }
   
   redrawCanvas(canvas = this.canvas, imageData = this.tempImageData) {
@@ -41,7 +40,6 @@ class Graph {
       ctx.putImageData(imageData, 0, 0);
     }
   }
-  
 }
 
 class Vertex {
@@ -81,7 +79,7 @@ class Vertex {
     /* Returns true if point (x, y) lies within this vertex's rectangle */
     if ((x >= this.topLeft["x"]) && (x <= this.bottomRight["x"]) &&
       (y >= this.topLeft["y"]) && (y <= this.bottomRight["y"])) return true;
-    
+
     return false;
   }
   
@@ -99,7 +97,6 @@ class Vertex {
   
   drawConnection(canvas, x1, y1, x2, y2) {
     /* Draws a line between two coordinates */
-    console.log("drawing connection");
     var ctx = canvas.getContext("2d");
     ctx.lineWidth = this.lineWidth;
     ctx.beginPath();
@@ -173,8 +170,6 @@ function setupElements() {
     } else if (flags["addEdge"]) {
       var vertex = getVertexAt(elements["mainCanvas"], x, y);
       if (vertex) {
-        console.log(mainGraph.tempEdge);
-        
         if (!mainGraph.tempEdge[0]) {
           mainGraph.tempEdge[0] = vertex;
         } else if ((!mainGraph.tempEdge[1]) && (mainGraph.tempEdge[1] != 
@@ -188,7 +183,7 @@ function setupElements() {
             v1.drawEdge(elements["mainCanvas"], v2);
             mainGraph.addEdge([v1, v2]);
             mainGraph.snapshotCanvas(elements["mainCanvas"]);
-            mainGraph.tempEdge = {"vertex1" : null, "vertex2" : null};
+            mainGraph.tempEdge = [null, null];
           }
         }
       }
