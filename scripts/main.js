@@ -237,8 +237,6 @@ function test() {
 
 function main() {
   setupElements();
-  //test();
-  
 
 }
 

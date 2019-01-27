@@ -14,3 +14,7 @@ p {
   color: silver;
   font-family: sans-serif;
 }
+
+#selectedVertex {
+  display: none;
+}
