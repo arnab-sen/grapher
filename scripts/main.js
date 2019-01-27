@@ -14,7 +14,8 @@ class Graph {
     this.vertices = [];
     this.edges = [];
     this.adjacencyList = [];
-    this.tempEdge = {"vertex1" : null, "vertex2" : null};
+    this.tempEdge = [null, null];
+    this.tempImageData = null;
   }
   
   addVertex(vertex) {
@@ -25,6 +26,20 @@ class Graph {
   addEdge(vertex1, vertex2) {
     this.edges.push([vertex1, vertex2]);
     this.numEdges++;
+  }
+  
+  snapshotCanvas(canvas = this.canvas) {
+    /* Saves the ImageData of the current canvas */
+    this.tempImageData = canvas.getContext("2d").getImageData(0, 0, canvas.height, canvas.width);
+  
+  }
+  
+  redrawCanvas(canvas = this.canvas, imageData = this.tempImageData) {
+    if (imageData) {
+      var ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.putImageData(imageData, 0, 0);
+    }
   }
   
 }
@@ -84,6 +99,7 @@ class Vertex {
   
   drawConnection(canvas, x1, y1, x2, y2) {
     /* Draws a line between two coordinates */
+    console.log("drawing connection");
     var ctx = canvas.getContext("2d");
     ctx.lineWidth = this.lineWidth;
     ctx.beginPath();
@@ -131,7 +147,7 @@ class Vertex {
   }
 }
 
-var mainGraph = new Graph();
+var mainGraph = new Graph(canvas = elements["mainCanvas"]);
 var flags = {
   "addVertex" : false,
   "addEdge" : false
@@ -159,17 +175,19 @@ function setupElements() {
       if (vertex) {
         console.log(mainGraph.tempEdge);
         
-        if (!mainGraph.tempEdge["vertex1"]) {
-          mainGraph.tempEdge["vertex1"] = vertex;
-        } else if ((!mainGraph.tempEdge["vertex2"]) && (mainGraph.tempEdge["vertex2"] != 
-          mainGraph.tempEdge["vertex1"])) {
-          mainGraph.tempEdge["vertex2"] = vertex;
-          v1 = mainGraph.tempEdge["vertex1"];
-          v2 = mainGraph.tempEdge["vertex2"];
+        if (!mainGraph.tempEdge[0]) {
+          mainGraph.tempEdge[0] = vertex;
+        } else if ((!mainGraph.tempEdge[1]) && (mainGraph.tempEdge[1] != 
+          mainGraph.tempEdge[0])) {
+          mainGraph.tempEdge[1] = vertex;
+          v1 = mainGraph.tempEdge[0];
+          v2 = mainGraph.tempEdge[1];
           
           if ((v1 != null) && (v2 != null)) {
+            mainGraph.redrawCanvas(elements["mainCanvas"]);
             v1.drawEdge(elements["mainCanvas"], v2);
             mainGraph.addEdge([v1, v2]);
+            mainGraph.snapshotCanvas(elements["mainCanvas"]);
             mainGraph.tempEdge = {"vertex1" : null, "vertex2" : null};
           }
         }
@@ -187,6 +205,20 @@ function setupElements() {
     }
   }
   
+  elements["mainCanvas"].addEventListener("mousemove", e => {
+    var x = e.clientX - elements["mainCanvas"].offsetLeft;
+    var y = e.clientY - elements["mainCanvas"].offsetTop;
+    var vertex1;
+    
+    if ((mainGraph.tempEdge[0] != null) && (mainGraph.tempEdge[1] == null)) {
+      vertex1 = mainGraph.tempEdge[0];
+      mainGraph.redrawCanvas(canvas = elements["mainCanvas"]);
+      vertex1.drawConnection(elements["mainCanvas"],
+       vertex1.x, vertex1.y, x, y);
+      vertex1.draw(elements["mainCanvas"]);
+    }
+  });
+  
   elements["addVertex"].onclick = () => {
     flags["addVertex"] = !flags["addVertex"];
     var buttonText = {true: "Stop Adding Vertices", false: "Add Vertices"}
@@ -197,6 +229,7 @@ function setupElements() {
     flags["addEdge"] = !flags["addEdge"];
     var buttonText = {true: "Currently Adding Edge...", false: "Add Edge"}
     elements["addEdge"].innerHTML = buttonText[flags["addEdge"]];
+    mainGraph.snapshotCanvas(canvas = elements["mainCanvas"]);
   }
 }
 
@@ -220,24 +253,8 @@ function randomInt(low, high) {
   return Math.floor((Math.random() * high) + low);
 }
 
-function test() {
-  var vertex1 = new Vertex("Vertex 1", value = 1, radius = 20, x = 100, y = 100);
-  var vertex2 = new Vertex("Vertex 2", value = 2, radius = 20, x = 200, y = 250);
-  mainGraph.addVertex(vertex1);
-  mainGraph.addVertex(vertex2);
-  vertex1.setColour(0, 200, 50);
-  vertex2.setColour(0, 50, 200);
-
-  //vertex1.drawConnection(mainCanvas, 100, 100, 200, 200);
-  vertex1.draw(elements["mainCanvas"]);
-  vertex2.draw(elements["mainCanvas"]);
-  
-  vertex1.drawEdge(elements["mainCanvas"], vertex2);
-}
-
 function main() {
   setupElements();
-
 }
 
 main();
