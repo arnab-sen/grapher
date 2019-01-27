@@ -222,7 +222,7 @@ function setupElements() {
   
   elements["addEdge"].onclick = () => {
     flags["addEdge"] = !flags["addEdge"];
-    var buttonText = {true: "Currently Adding Edge...", false: "Add Edge"}
+    var buttonText = {true: "Stop Adding Edges", false: "Add Edges"}
     elements["addEdge"].innerHTML = buttonText[flags["addEdge"]];
     mainGraph.snapshotCanvas(canvas = elements["mainCanvas"]);
   }
