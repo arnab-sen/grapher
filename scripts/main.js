@@ -3,7 +3,9 @@ var elements = {
   "mainCanvas" : getElement("#mainCanvas"),
   "addVertex" : getElement("#addVertex"),
   "addEdge" : getElement("#addEdge"),
-  "selectedVertex" : getElement("#selectedVertex")
+  "selectedVertex" : getElement("#selectedVertex"),
+  "increaseRadius" : getElement("#increaseRadius"),
+  "decreaseRadius" : getElement("#decreaseRadius")
 };
 
 class Graph {
@@ -16,6 +18,7 @@ class Graph {
     this.adjacencyList = [];
     this.tempEdge = [null, null];
     this.tempImageData = null;
+    this.defaultRadius = 20;
   }
   
   addVertex(vertex) {
@@ -163,7 +166,7 @@ function setupElements() {
     var v1, v2;
     
     if (flags["addVertex"]) {
-      var vertex = new Vertex("", value = 1, radius = 20, x = x, y = y);
+      var vertex = new Vertex("", value = 1, radius = mainGraph.defaultRadius, x = x, y = y);
       vertex.setColour(randomInt(0, 256), randomInt(0, 256), randomInt(0, 256));
       vertex.draw(elements["mainCanvas"]);
       mainGraph.addVertex(vertex);
@@ -226,6 +229,13 @@ function setupElements() {
     elements["addEdge"].innerHTML = buttonText[flags["addEdge"]];
     mainGraph.snapshotCanvas(canvas = elements["mainCanvas"]);
   }
+  
+  elements["increaseRadius"].onclick = () => mainGraph.defaultRadius += 5;
+  
+  elements["decreaseRadius"].onclick = () => {
+    mainGraph.defaultRadius -= 5;
+    if (mainGraph.defaultRadius < 5) mainGraph.defaultRadius = 5;
+  };
 }
 
 function getElement(elementName) {
