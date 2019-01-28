@@ -18,3 +18,7 @@ p {
 #selectedVertex {
   display: none;
 }
+
+#addTextField {
+  width: 50px;
+}

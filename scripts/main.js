@@ -5,7 +5,9 @@ var elements = {
   "addEdge" : getElement("#addEdge"),
   "selectedVertex" : getElement("#selectedVertex"),
   "increaseRadius" : getElement("#increaseRadius"),
-  "decreaseRadius" : getElement("#decreaseRadius")
+  "decreaseRadius" : getElement("#decreaseRadius"),
+  "addTextField" : getElement("#addTextField"),
+  "addText" : getElement("#addText")
 };
 
 class Graph {
@@ -19,6 +21,7 @@ class Graph {
     this.tempEdge = [null, null];
     this.tempImageData = null;
     this.defaultRadius = 20;
+    this.tempText = null;
   }
   
   addVertex(vertex) {
@@ -190,6 +193,9 @@ function setupElements() {
           }
         }
       }
+    } else if (mainGraph.tempText != null) {
+        drawText(elements["mainCanvas"], mainGraph.tempText, x, y);
+        mainGraph.tempText = null;
     } else {
       var vertex = getVertexAt(elements["mainCanvas"], x, y);
       if (vertex) {
@@ -236,6 +242,12 @@ function setupElements() {
     mainGraph.defaultRadius -= 5;
     if (mainGraph.defaultRadius < 5) mainGraph.defaultRadius = 5;
   };
+  
+  window.onload = () => elements["addTextField"].value = "";
+  
+  elements["addText"].onclick = () => {
+    mainGraph.tempText = elements["addTextField"].value;
+  };
 }
 
 function getElement(elementName) {
@@ -256,6 +268,14 @@ function getVertexAt(canvas, x, y) {
 function randomInt(low, high) {
   /* Returns a random number in the range [low, high) */
   return Math.floor((Math.random() * high) + low);
+}
+
+function drawText(canvas, text, x, y, font = "20px Arial", colour = "black", align = "center") {
+  var ctx = canvas.getContext("2d");
+  ctx.font = font;
+  ctx.fillStyle = colour;
+  ctx.textAlign = align;
+  ctx.fillText(text, x, y);
 }
 
 function main() {
