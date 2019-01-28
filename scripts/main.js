@@ -171,7 +171,7 @@ function setupElements() {
     
     if (flags["addVertex"]) {
       var vertex = new Vertex(mainGraph.numVertices.toString(), value = 1, radius = mainGraph.defaultRadius, x = x, y = y);
-      vertex.setColour(randomInt(0, 256), randomInt(0, 256), randomInt(0, 256));
+      vertex.setColour(randomInt(80, 256), randomInt(80, 256), randomInt(80, 256));
       vertex.draw(elements["mainCanvas"]);
       mainGraph.addVertex(vertex);
     } else if (flags["addEdge"]) {
