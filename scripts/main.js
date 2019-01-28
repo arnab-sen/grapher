@@ -99,6 +99,7 @@ class Vertex {
     ctx.stroke();
     ctx.fillStyle = this.fillStyle;
     ctx.fill();
+    drawText(canvas, this.name, x, y);
   }
   
   drawConnection(canvas, x1, y1, x2, y2) {
@@ -169,7 +170,7 @@ function setupElements() {
     var v1, v2;
     
     if (flags["addVertex"]) {
-      var vertex = new Vertex("", value = 1, radius = mainGraph.defaultRadius, x = x, y = y);
+      var vertex = new Vertex(mainGraph.numVertices.toString(), value = 1, radius = mainGraph.defaultRadius, x = x, y = y);
       vertex.setColour(randomInt(0, 256), randomInt(0, 256), randomInt(0, 256));
       vertex.draw(elements["mainCanvas"]);
       mainGraph.addVertex(vertex);
@@ -240,7 +241,7 @@ function setupElements() {
   
   elements["decreaseRadius"].onclick = () => {
     mainGraph.defaultRadius -= 5;
-    if (mainGraph.defaultRadius < 5) mainGraph.defaultRadius = 5;
+    if (mainGraph.defaultRadius < 15) mainGraph.defaultRadius = 15;
   };
   
   window.onload = () => elements["addTextField"].value = "";
@@ -270,12 +271,12 @@ function randomInt(low, high) {
   return Math.floor((Math.random() * high) + low);
 }
 
-function drawText(canvas, text, x, y, font = "20px Arial", colour = "black", align = "center") {
+function drawText(canvas, text, x, y, fontSize = 20, font = "Arial", colour = "black", align = "center") {
   var ctx = canvas.getContext("2d");
-  ctx.font = font;
+  ctx.font = `${fontSize}px ` + font;
   ctx.fillStyle = colour;
   ctx.textAlign = align;
-  ctx.fillText(text, x, y);
+  ctx.fillText(text, x, y + (fontSize / 3));
 }
 
 function main() {
