@@ -170,7 +170,8 @@ function setupElements() {
     var v1, v2;
     
     if (flags["addVertex"]) {
-      var vertex = new Vertex(mainGraph.numVertices.toString(), value = 1, radius = mainGraph.defaultRadius, x = x, y = y);
+      var vertex = new Vertex(mainGraph.numVertices.toString(), value = mainGraph.numVertices,
+        radius = mainGraph.defaultRadius, x = x, y = y);
       vertex.setColour(randomInt(80, 256), randomInt(80, 256), randomInt(80, 256));
       vertex.draw(elements["mainCanvas"]);
       mainGraph.addVertex(vertex);
