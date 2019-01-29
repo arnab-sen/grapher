@@ -22,3 +22,20 @@ p {
 #addTextField {
   width: 50px;
 }
+
+.outputTextBox {
+  display: block;
+  width: 500px;
+  height: 250px;
+  background-color: rgb(35, 39, 41);
+  margin: 20px;
+}
+
+#consoleOutput {
+  font-family: "Courier New", Arial, serif;
+  color: silver;
+  text-align: left;
+  margin-left: 10px;
+  padding-top: 10px;
+  white-space: pre;
+}

@@ -8,7 +8,8 @@ var elements = {
   "decreaseRadius" : getElement("#decreaseRadius"),
   "addTextField" : getElement("#addTextField"),
   "addText" : getElement("#addText"),
-  "outputGraph" : getElement("#outputGraph")
+  "outputGraph" : getElement("#outputGraph"),
+  "consoleOutput" : getElement("#consoleOutput")
 };
 
 class Graph {
@@ -27,12 +28,14 @@ class Graph {
   
   addVertex(vertex) {
     this.vertices.push(vertex);
-    this.adjacencyList.push(new Array());
+    this.adjacencyList.push([]);
     this.numVertices++;
   }
   
   addEdge(vertex1, vertex2) {
-    this.edges.push([vertex1, vertex2]);
+    if (this.adjacencyList[vertex1.value].includes(vertex2.value) ||
+      this.adjacencyList[vertex2.value].includes(vertex1.value)) return;
+    this.edges.push([vertex1.value, vertex2.value]);
     this.adjacencyList[vertex1.value].push(vertex2.value);
     this.adjacencyList[vertex2.value].push(vertex1.value);
     this.numEdges++;
@@ -56,7 +59,6 @@ class Graph {
     /* Returns a formatted string of this graph's adjacency list */
     var outputString = "[";
     var temp;
-    console.log(this.adjacencyList);
     
     for (var i = 0; i < this.adjacencyList.length; i++) {
       temp = "[";
@@ -64,9 +66,13 @@ class Graph {
         temp += this.adjacencyList[i][j].toString();
         temp += ",";
       }
-      temp += this.adjacencyList[i][this.adjacencyList[i].length - 1].toString() + "]";
+      
+      if (this.adjacencyList[i].length > 0) {
+        temp += this.adjacencyList[i][this.adjacencyList[i].length - 1].toString();
+      }
+      temp += "]";
       outputString += temp;
-      if (i < this.adjacencyList.length - 1) outputString += ",\n";
+      if (i < this.adjacencyList.length - 1) outputString += ",\r\n";
     }
     outputString += "]";
     
@@ -189,12 +195,16 @@ function setupElements() {
     var ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     mainGraph = new Graph(canvas = elements["mainCanvas"]);
+    clearTextFields();
   };
 
   elements["mainCanvas"].onclick = e => {
     var x = e.clientX - elements["mainCanvas"].offsetLeft;
     var y = e.clientY - elements["mainCanvas"].offsetTop;
     var v1, v2;
+    
+    // Adding edges takes priority as it usually happens after adding vertices
+    if (flags["addVertex"] && flags["addEdge"]) elements["addVertex"].onclick();
     
     if (flags["addVertex"]) {
       var vertex = new Vertex(mainGraph.numVertices.toString(), value = mainGraph.numVertices,
@@ -272,15 +282,22 @@ function setupElements() {
     if (mainGraph.defaultRadius < 15) mainGraph.defaultRadius = 15;
   };
   
-  window.onload = () => elements["addTextField"].value = "";
+  window.onload = () => {
+    clearTextFields();
+  };
   
   elements["addText"].onclick = () => {
     mainGraph.tempText = elements["addTextField"].value;
   };
   
   elements["outputGraph"].onclick = () => {
-    alert(mainGraph.outputGraph());
+    elements["consoleOutput"].textContent = mainGraph.outputGraph();
   };
+}
+
+function clearTextFields() {
+  elements["addTextField"].value = "";
+  elements["consoleOutput"].textContent = "";
 }
 
 function getElement(elementName) {
