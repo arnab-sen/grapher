@@ -7,7 +7,8 @@ var elements = {
   "increaseRadius" : getElement("#increaseRadius"),
   "decreaseRadius" : getElement("#decreaseRadius"),
   "addTextField" : getElement("#addTextField"),
-  "addText" : getElement("#addText")
+  "addText" : getElement("#addText"),
+  "outputGraph" : getElement("#outputGraph")
 };
 
 class Graph {
@@ -26,11 +27,14 @@ class Graph {
   
   addVertex(vertex) {
     this.vertices.push(vertex);
+    this.adjacencyList.push(new Array());
     this.numVertices++;
   }
   
   addEdge(vertex1, vertex2) {
     this.edges.push([vertex1, vertex2]);
+    this.adjacencyList[vertex1.value].push(vertex2.value);
+    this.adjacencyList[vertex2.value].push(vertex1.value);
     this.numEdges++;
   }
   
@@ -45,6 +49,28 @@ class Graph {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.putImageData(imageData, 0, 0);
     }
+  }
+  
+  
+  outputGraph() {
+    /* Returns a formatted string of this graph's adjacency list */
+    var outputString = "[";
+    var temp;
+    console.log(this.adjacencyList);
+    
+    for (var i = 0; i < this.adjacencyList.length; i++) {
+      temp = "[";
+      for (var j = 0; j < this.adjacencyList[i].length - 1; j++) {
+        temp += this.adjacencyList[i][j].toString();
+        temp += ",";
+      }
+      temp += this.adjacencyList[i][this.adjacencyList[i].length - 1].toString() + "]";
+      outputString += temp;
+      if (i < this.adjacencyList.length - 1) outputString += ",\n";
+    }
+    outputString += "]";
+    
+    return outputString;
   }
 }
 
@@ -162,6 +188,7 @@ function setupElements() {
     var canvas = elements["mainCanvas"];
     var ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    mainGraph = new Graph(canvas = elements["mainCanvas"]);
   };
 
   elements["mainCanvas"].onclick = e => {
@@ -189,7 +216,7 @@ function setupElements() {
           if ((v1 != null) && (v2 != null)) {
             mainGraph.redrawCanvas(elements["mainCanvas"]);
             v1.drawEdge(elements["mainCanvas"], v2);
-            mainGraph.addEdge([v1, v2]);
+            mainGraph.addEdge(v1, v2);
             mainGraph.snapshotCanvas(elements["mainCanvas"]);
             mainGraph.tempEdge = [null, null];
           }
@@ -249,6 +276,10 @@ function setupElements() {
   
   elements["addText"].onclick = () => {
     mainGraph.tempText = elements["addTextField"].value;
+  };
+  
+  elements["outputGraph"].onclick = () => {
+    alert(mainGraph.outputGraph());
   };
 }
 
