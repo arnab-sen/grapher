@@ -1,1 +1,1 @@
-A browser-based graph/network maker that can produce a program-readable output. I made this to give myself the ability to quickly produce test examples/scenarios for graphing algorithm programming assignment. Viewable at <https://arnab-sen.github.io/grapher>
+A browser-based graph/network maker that can produce a program-readable output. I made this to give myself the ability to quickly produce test examples/scenarios for a graphing algorithm programming assignment. Viewable at <https://arnab-sen.github.io/grapher>
